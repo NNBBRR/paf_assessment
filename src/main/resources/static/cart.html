@@ -18,7 +18,7 @@
 			</a>
 		</div>
 	</nav>
-
+  <div class="container">
     <form method="POST" action="/cart">
       <table>
         <tr>
@@ -39,7 +39,34 @@
         </tr>
       </table>
     </form>
+  </div>
 
+  <div class="container">
+    <h2>Contents</h2>
+    <table border="2">
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr data-th-each="li: ${lineItems}">
+                <td><span data-th-text="${li.item}"></span></td>
+                <td><span data-th-text="${li.quantity}"></span></td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="2">
+                    <form method="POST" action="/checkout">
+                        <button type="submit">Checkout</button>
+                    </form>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
 <script src="runtime.333e5c9206d3987b.js" type="module"></script><script src="polyfills.2f476ae5aba6c940.js" type="module"></script><script src="main.5b589088f2c50942.js" type="module"></script>
 
 </body></html>

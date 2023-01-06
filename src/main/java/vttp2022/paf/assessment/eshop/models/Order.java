@@ -3,6 +3,12 @@ package vttp2022.paf.assessment.eshop.models;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
+
+import org.springframework.jdbc.support.rowset.SqlRowSet;
+
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
 
 // DO NOT CHANGE THIS CLASS
 public class Order {
@@ -54,27 +60,26 @@ public class Order {
 	public void setLineItems(List<LineItem> lineItems) { this.lineItems = lineItems; }
 	public void addLineItem(LineItem lineItem) { this.lineItems.add(lineItem); }
 	
+	// Generate a ticket order id
+	String OrderId = UUID.randomUUID().toString().substring(0, 8);
 
-	public static OrderDetails create(SqlRowSet rs) {
-        OrderDetails od = new OrderDetails();
-        od.setId(rs.getInt("order_id"));
-        od.setOrderDate(new DateTime(
+	public static Order create(SqlRowSet rs) {
+        Order o = new Order();
+        o.setOrderId(rs.getString("order_id"));
+        o.setOrderDate(new DateTime(
                 DateTimeFormat.forPattern("dd/MM/yyyy")
                         .parseDateTime(rs.getString("order_date"))));
-        od.setCustomerId(rs.getInt("customer_id"));
-        od.setTotalDiscountedPrice(rs.getDouble("discounted_price"));
-        od.setCostPrice(rs.getDouble("cost_price"));
-        return od;
+        o.setDeliveryId(rs.getString("delivery_id"));
+		o.setStatus(rs.getString("status"));
+        return o;
     }
 
-    // toJSON needs to be string
     public JsonObject toJSON() {
         return Json.createObjectBuilder()
-                .add("order_id", getId())
+                .add("order_id", getOrderId())
                 .add("order_date", getOrderDate() != null ? getOrderDate().toString() : "")
-                .add("customer_id", getCustomerId())
-                .add("discounted_price", getTotalDiscountedPrice().toString()) // .toString the double
-                .add("cost_price", getCostPrice().toString()) // .toString the double
+                .add("delivery_id", getDeliveryId())
+				.add("status", getStatus())
                 .build();
     }
 }
